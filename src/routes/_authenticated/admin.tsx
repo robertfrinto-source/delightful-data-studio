@@ -33,7 +33,8 @@ const GROUPS = [
     { to: "/admin/payments", label: "المدفوعات", icon: Wallet },
   ] },
 ] as const;
-const ALL = GROUPS.flatMap((g) => g.items);
+type NavItem = (typeof GROUPS)[number]["items"][number];
+const ALL: NavItem[] = GROUPS.flatMap((g) => [...g.items] as NavItem[]);
 
 function AdminLayout() {
   const qc = useQueryClient();
