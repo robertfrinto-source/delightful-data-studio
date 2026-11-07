@@ -58,7 +58,7 @@ function Index() {
             <a href="#packages">تصفح الباقات <ArrowLeft className="h-4 w-4" /></a>
           </Button>
           <div className="mx-auto mt-14 grid max-w-2xl grid-cols-3 gap-4 border-t border-primary-foreground/15 pt-8">
-            {[["+1000", "عميل يثق بنا"], ["24/7", "متابعة الاستهلاك"], ["دقائق", "لتفعيل الطلب"]].map(([v, l]) => (
+            {[["أونلاين", "طلب الاشتراك"], ["24/7", "متابعة الاستهلاك"], ["آمن", "دفع ورفع الإيصالات"]].map(([v, l]) => (
               <div key={l}><div className="font-display text-2xl font-bold text-accent">{v}</div><div className="mt-1 text-xs opacity-70">{l}</div></div>
             ))}
           </div>

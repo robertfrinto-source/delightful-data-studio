@@ -46,7 +46,7 @@ function Portal() {
   return (
     <div className="min-h-screen">
       <header className="bg-hero text-primary-foreground">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 pb-20 pt-8">
           <div><div className="text-sm opacity-70">مرحباً</div><h1 className="text-2xl font-bold">{data?.c?.full_name ?? "عميلنا العزيز"}</h1></div>
           <Button variant="secondary" size="sm" onClick={signOut}><LogOut className="h-4 w-4" /> خروج</Button>
         </div>
@@ -55,6 +55,16 @@ function Portal() {
         {!data ? (
           <div className="rounded-2xl border bg-card p-10 text-center text-muted-foreground">لم يتم ربط حسابك بعد بملف عميل. تواصل مع الإدارة وتأكد من تسجيل نفس البريد الإلكتروني.</div>
         ) : (
+          <>
+          <div className="-mt-14 mb-8 grid gap-4 sm:grid-cols-3">
+            {[
+              { l: "الخطوط النشطة", v: data.lines.filter((x: Row) => x.status === "active").length },
+              { l: "المستحق عليك", v: fmtMoney(data.invoices.reduce((a: number, i: Row) => a + Number(i.amount) - Number(i.amount_paid), 0)) },
+              { l: "إشعارات جديدة", v: data.notifs.filter((n: Row) => !n.is_read).length },
+            ].map((k) => (
+              <div key={k.l} className="rounded-2xl border bg-card p-5 shadow-elegant"><div className="text-sm text-muted-foreground">{k.l}</div><div className="mt-1 text-2xl font-bold">{k.v}</div></div>
+            ))}
+          </div>
           <Tabs defaultValue="lines">
             <TabsList className="flex-wrap">
               <TabsTrigger value="lines">خطوطي</TabsTrigger>
@@ -101,6 +111,7 @@ function Portal() {
               ))}
             </TabsContent>
           </Tabs>
+          </>
         )}
       </main>
     </div>
