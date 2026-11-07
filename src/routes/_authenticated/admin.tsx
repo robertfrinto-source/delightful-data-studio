@@ -80,7 +80,7 @@ function AdminLayout() {
       <div className="min-w-0 flex-1">
         <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background/80 px-6 backdrop-blur">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span>لوحة التحكم</span><span>/</span><span className="font-medium text-foreground">{current.label}</span>
+            <span>لوحة التحكم</span><span>/</span><span className="font-medium text-foreground">{current?.label}</span>
           </div>
           <div className="text-xs text-muted-foreground">{new Date().toLocaleDateString("ar-EG", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</div>
         </header>
