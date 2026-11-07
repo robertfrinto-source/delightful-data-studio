@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet, redirect, useNavigate, useRouterState } from "@tanstack/react-router";
+import { type LinkProps, createFileRoute, Link, Outlet, redirect, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { LayoutDashboard, Users, Package, Phone, Repeat, FileText, Wallet, Inbox, UserPlus, Boxes, Bell, LogOut, Signal } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +14,8 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
 });
 
-const GROUPS = [
+type NavItem = { to: NonNullable<LinkProps["to"]>; label: string; icon: typeof Users };
+const GROUPS: { title: string; items: NavItem[] }[] = [
   { title: "الرئيسية", items: [{ to: "/admin", label: "نظرة عامة", icon: LayoutDashboard }] },
   { title: "العملاء", items: [
     { to: "/admin/registrations", label: "طلبات الاشتراك", icon: UserPlus },
@@ -32,16 +33,15 @@ const GROUPS = [
     { to: "/admin/invoices", label: "الفواتير", icon: FileText },
     { to: "/admin/payments", label: "المدفوعات", icon: Wallet },
   ] },
-] as const;
-type NavItem = (typeof GROUPS)[number]["items"][number];
-const ALL: NavItem[] = GROUPS.flatMap((g) => [...g.items] as NavItem[]);
+];
+const ALL: NavItem[] = GROUPS.flatMap((g) => g.items);
 
 function AdminLayout() {
   const qc = useQueryClient();
   const nav = useNavigate();
   const { data: me } = useMe();
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const current = [...ALL].reverse().find((n) => path === n.to || path.startsWith(n.to + "/")) ?? ALL[0];
+  const current = [...ALL].reverse().find((n) => path === n.to || path.startsWith(String(n.to) + "/")) ?? ALL[0];
   const signOut = async () => {
     await qc.cancelQueries(); qc.clear();
     await supabase.auth.signOut();
