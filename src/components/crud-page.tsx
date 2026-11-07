@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { STATUS_AR, fmtDate, fmtMoney } from "@/lib/auth";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type Row = Record<string, any>;
+export type Row = any;
 export type Field = {
   key: string;
   label: string;

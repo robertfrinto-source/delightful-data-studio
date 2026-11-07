@@ -13,7 +13,7 @@ function Page() {
     const period = new Date().toISOString().slice(0, 7);
     const due = new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10);
     const { error } = await db.from("invoices").insert({ customer_id: s.customer_id, subscription_id: s.id, billing_period: period, amount: s.selling_price, due_date: due });
-    if (error) return toast.error(error.message);
+    if (error) return void toast.error(error.message);
     const next = new Date(s.renewal_date ?? Date.now()); next.setDate(next.getDate() + 30);
     await db.from("subscriptions").update({ renewal_date: next.toISOString().slice(0, 10) }).eq("id", s.id);
     toast.success("تم إصدار الفاتورة وتجديد تاريخ الاستحقاق");

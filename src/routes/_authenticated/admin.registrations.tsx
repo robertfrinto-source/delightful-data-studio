@@ -14,7 +14,7 @@ function Page() {
       full_name: r.full_name, phone: r.phone, alt_phone: r.alt_phone, email: r.email, national_id: r.national_id,
       governorate: r.governorate, address: r.address, segment: r.segment,
     }).select().single();
-    if (error) return toast.error(error.message);
+    if (error) return void toast.error(error.message);
     if (r.package_id) {
       const { data: p } = await db.from("packages").select("*").eq("id", r.package_id).single();
       if (p) {

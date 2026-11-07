@@ -14,9 +14,9 @@ function Reset() {
   const [pw, setPw] = useState("");
   const nav = useNavigate();
   const save = async () => {
-    if (pw.length < 8) return toast.error("8 أحرف على الأقل");
+    if (pw.length < 8) return void toast.error("8 أحرف على الأقل");
     const { error } = await supabase.auth.updateUser({ password: pw });
-    if (error) return toast.error(error.message);
+    if (error) return void toast.error(error.message);
     toast.success("تم تحديث كلمة المرور");
     nav({ to: "/dashboard" });
   };

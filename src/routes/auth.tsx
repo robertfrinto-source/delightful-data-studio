@@ -30,19 +30,19 @@ function AuthPage() {
     setBusy(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
-    if (error) return toast.error("بيانات الدخول غير صحيحة");
+    if (error) return void toast.error("بيانات الدخول غير صحيحة");
     nav({ to: "/dashboard" });
   };
   const signUp = async () => {
-    if (password.length < 8) return toast.error("كلمة المرور 8 أحرف على الأقل");
+    if (password.length < 8) return void toast.error("كلمة المرور 8 أحرف على الأقل");
     setBusy(true);
     const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin + "/dashboard", data: { full_name: name } } });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) return void toast.error(error.message);
     toast.success("تم إنشاء الحساب. راجع بريدك لتأكيد الحساب.");
   };
   const reset = async () => {
-    if (!email) return toast.error("اكتب بريدك أولاً");
+    if (!email) return void toast.error("اكتب بريدك أولاً");
     await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + "/reset-password" });
     toast.success("أرسلنا رابط إعادة التعيين إلى بريدك");
   };

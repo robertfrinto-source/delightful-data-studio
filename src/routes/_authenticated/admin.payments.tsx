@@ -14,7 +14,7 @@ function Page() {
   const qc = useQueryClient();
   const setStatus = async (r: Row, status: string) => {
     const { error } = await db.from("payments").update({ status }).eq("id", r.id);
-    if (error) return toast.error(error.message);
+    if (error) return void toast.error(error.message);
     await db.from("notifications").insert({ customer_id: r.customer_id, title: status === "verified" ? "تم تأكيد دفعتك" : "تم رفض دفعتك", message: `مبلغ ${r.amount} ج.م` });
     toast.success("تم التحديث"); qc.invalidateQueries();
   };

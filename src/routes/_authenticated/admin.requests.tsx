@@ -25,7 +25,7 @@ function Page() {
       }
     }
     const { error } = await db.from("requests").update({ status: approve ? "approved" : "rejected", admin_response: response, processed_at: new Date().toISOString() }).eq("id", r.id);
-    if (error) return toast.error(error.message);
+    if (error) return void toast.error(error.message);
     await db.from("notifications").insert({ customer_id: r.customer_id, title: approve ? "تم قبول طلبك" : "تم رفض طلبك", message: response });
     toast.success("تم"); qc.invalidateQueries();
   };
