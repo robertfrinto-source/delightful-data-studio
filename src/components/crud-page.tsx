@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { Inbox, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -126,23 +126,49 @@ export function CrudPage({
   });
 
   const cols = fields.filter((f) => !f.hideInTable);
+  const statusCounts = useMemo(() => {
+    if (!fields.some((f) => f.key === "status")) return [];
+    const m: Record<string, number> = {};
+    data.forEach((r) => { if (r.status) m[r.status] = (m[r.status] ?? 0) + 1; });
+    return Object.entries(m);
+  }, [data, fields]);
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold">{title}</h1>
-        <div className="flex gap-2">
-          <div className="relative"><Search className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" /><Input className="w-56 pr-9" placeholder="بحث..." value={q} onChange={(e) => setQ(e.target.value)} /></div>
-          {canCreate && <Button onClick={() => setEditing({ ...defaults })}><Plus className="h-4 w-4" /> إضافة</Button>}
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{data.length.toLocaleString("ar-EG")} سجل</p>
         </div>
+        {canCreate && <Button size="lg" className="bg-gradient-primary shadow-elegant" onClick={() => setEditing({ ...defaults })}><Plus className="h-4 w-4" /> إضافة جديد</Button>}
       </div>
-      <div className="overflow-x-auto rounded-xl border bg-card">
+      {statusCounts.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {statusCounts.map(([s, n]) => (
+            <button key={s} onClick={() => setQ(q === s ? "" : s)} className={`rounded-full border px-3 py-1 text-xs transition-colors ${q === s ? "border-primary bg-primary text-primary-foreground" : "bg-card hover:bg-secondary"}`}>
+              {STATUS_AR[s] ?? s} <span className="font-bold">{n}</span>
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
+        <div className="flex items-center gap-3 border-b bg-muted/40 p-3">
+          <div className="relative max-w-sm flex-1"><Search className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" /><Input className="bg-background pr-9" placeholder="ابحث في كل الحقول..." value={q} onChange={(e) => setQ(e.target.value)} /></div>
+          {q && <span className="text-xs text-muted-foreground">{rows.length} نتيجة</span>}
+        </div>
+        <div className="overflow-x-auto">
         <Table>
-          <TableHeader><TableRow>{cols.map((f) => <TableHead key={f.key} className="text-right">{f.label}</TableHead>)}<TableHead /></TableRow></TableHeader>
+          <TableHeader><TableRow className="bg-muted/30 hover:bg-muted/30">{cols.map((f) => <TableHead key={f.key} className="whitespace-nowrap text-right text-xs font-bold uppercase text-muted-foreground">{f.label}</TableHead>)}<TableHead /></TableRow></TableHeader>
           <TableBody>
-            {isLoading && <TableRow><TableCell colSpan={cols.length + 1} className="text-center text-muted-foreground">جارٍ التحميل...</TableCell></TableRow>}
-            {!isLoading && rows.length === 0 && <TableRow><TableCell colSpan={cols.length + 1} className="py-10 text-center text-muted-foreground">لا توجد بيانات</TableCell></TableRow>}
+            {isLoading && Array.from({ length: 4 }).map((_, i) => <TableRow key={i}><TableCell colSpan={cols.length + 1}><div className="h-5 animate-pulse rounded bg-muted" /></TableCell></TableRow>)}
+            {!isLoading && rows.length === 0 && (
+              <TableRow><TableCell colSpan={cols.length + 1} className="py-16 text-center">
+                <Inbox className="mx-auto h-10 w-10 text-muted-foreground/50" />
+                <div className="mt-3 font-medium">لا توجد بيانات بعد</div>
+                <div className="text-sm text-muted-foreground">{canCreate ? "ابدأ بإضافة أول سجل" : "ستظهر السجلات هنا عند وصولها"}</div>
+              </TableCell></TableRow>
+            )}
             {rows.map((r) => (
-              <TableRow key={r.id}>
+              <TableRow key={r.id} className="transition-colors hover:bg-secondary/40">
                 {cols.map((f) => <TableCell key={f.key}><Cell f={f} v={r[f.key]} /></TableCell>)}
                 <TableCell className="whitespace-nowrap text-left">
                   <div className="flex justify-end gap-1">
@@ -155,6 +181,7 @@ export function CrudPage({
             ))}
           </TableBody>
         </Table>
+        </div>
       </div>
       <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
         <DialogContent dir="rtl" className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
