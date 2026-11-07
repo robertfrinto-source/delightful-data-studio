@@ -28,3 +28,6 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Admin CRUD screens are config-driven via `src/components/crud-page.tsx`; add new admin tables as a field config, not bespoke pages — keeps ~10 modules consistent.
+- Roles live in `user_roles` (first signup becomes admin via `handle_new_user` trigger); customers link to logins by matching email — avoids admin-only account creation.
