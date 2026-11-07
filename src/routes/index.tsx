@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Wifi, Phone, ArrowLeft, Check } from "lucide-react";
+import { Wifi, Phone, ArrowLeft, Check, Signal, MousePointerClick, ClipboardList, Gauge } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,7 +44,7 @@ function Index() {
       <header className="relative overflow-hidden bg-hero text-primary-foreground">
         <div className="pointer-events-none absolute inset-0 grid-pattern" />
         <nav className="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-          <span className="font-display text-xl font-bold">اشتراكاتي</span>
+          <span className="flex items-center gap-2 font-display text-xl font-bold"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent text-accent-foreground"><Signal className="h-4 w-4" /></span>اشتراكاتي</span>
           <Button asChild variant="secondary" size="sm"><Link to="/auth">تسجيل الدخول</Link></Button>
         </nav>
         <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-14 text-center">
@@ -57,6 +57,11 @@ function Index() {
           <Button asChild size="lg" className="mt-8 bg-accent text-accent-foreground hover:bg-accent/90">
             <a href="#packages">تصفح الباقات <ArrowLeft className="h-4 w-4" /></a>
           </Button>
+          <div className="mx-auto mt-14 grid max-w-2xl grid-cols-3 gap-4 border-t border-primary-foreground/15 pt-8">
+            {[["+1000", "عميل يثق بنا"], ["24/7", "متابعة الاستهلاك"], ["دقائق", "لتفعيل الطلب"]].map(([v, l]) => (
+              <div key={l}><div className="font-display text-2xl font-bold text-accent">{v}</div><div className="mt-1 text-xs opacity-70">{l}</div></div>
+            ))}
+          </div>
         </div>
       </header>
 
@@ -87,6 +92,23 @@ function Index() {
           </div>
         )}
       </section>
+      <section className="border-y bg-card py-20">
+        <div className="mx-auto max-w-6xl px-6">
+          <h2 className="text-center text-3xl font-bold">كيف تشترك؟</h2>
+          <p className="mt-2 text-center text-muted-foreground">ثلاث خطوات بسيطة وخطك يكون جاهز</p>
+          <div className="mt-12 grid gap-8 md:grid-cols-3">
+            {[{ i: MousePointerClick, t: "اختر الباقة", d: "قارن بين الباقات واختر الأنسب لاستخدامك." }, { i: ClipboardList, t: "أرسل طلبك", d: "املأ بياناتك وسنراجع الطلب فوراً." }, { i: Gauge, t: "تابع من حسابك", d: "استهلاكك وفواتيرك ومدفوعاتك في مكان واحد." }].map(({ i: I, t, d }, n) => (
+              <div key={t} className="relative rounded-2xl border bg-background p-6">
+                <span className="absolute left-5 top-5 font-display text-4xl font-bold text-primary/10">0{n + 1}</span>
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-primary text-primary-foreground"><I className="h-6 w-6" /></div>
+                <h3 className="mt-4 text-lg font-bold">{t}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      <footer className="py-8 text-center text-sm text-muted-foreground">© {new Date().getFullYear()} اشتراكاتي — جميع الحقوق محفوظة</footer>
       <RegisterDialog pkg={chosen} onClose={() => setChosen(null)} />
     </div>
   );
