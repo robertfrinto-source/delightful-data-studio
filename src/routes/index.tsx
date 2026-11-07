@@ -48,21 +48,19 @@ function Index() {
           <Button asChild variant="secondary" size="sm"><Link to="/auth">تسجيل الدخول</Link></Button>
         </nav>
         <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-14 text-center">
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
-            className="text-4xl font-bold leading-tight md:text-6xl">
+          <h1 className="animate-in fade-in slide-in-from-bottom-4 duration-700 text-4xl font-bold leading-tight md:text-6xl">
             إنترنت أسرع، <span className="text-accent">إدارة أسهل</span>
-          </motion.h1>
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-            className="mx-auto mt-5 max-w-xl text-lg opacity-80">
+          </h1>
+          <p className="animate-in fade-in duration-1000 mx-auto mt-5 max-w-xl text-lg opacity-80">
             اختر باقتك واطلب اشتراكك أونلاين، وتابع استهلاكك وفواتيرك من حسابك.
-          </motion.p>
+          </p>
           <Button asChild size="lg" className="mt-8 bg-accent text-accent-foreground hover:bg-accent/90">
             <a href="#packages">تصفح الباقات <ArrowLeft className="h-4 w-4" /></a>
           </Button>
         </div>
       </header>
 
-      <section id="packages" className="mx-auto -mt-12 max-w-6xl px-6 pb-24">
+      <section id="packages" className="relative mx-auto -mt-12 max-w-6xl px-6 pb-24">
         {packages.length === 0 ? (
           <div className="rounded-2xl border bg-card p-12 text-center text-muted-foreground shadow-elegant">لا توجد باقات متاحة حالياً.</div>
         ) : (
