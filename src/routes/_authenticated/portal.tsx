@@ -37,7 +37,7 @@ function Portal() {
         db.from("notifications").select("*").order("created_at", { ascending: false }),
         db.from("packages").select("id,name,selling_price"),
       ]);
-      return { c, lines: l.data ?? [], subs: s.data ?? [], invoices: i.data ?? [], payments: p.data ?? [], requests: r.data ?? [], notifs: n.data ?? [], packages: pk.data ?? [] } as Record<string, any>;
+      return { c, lines: l.data ?? [], subs: s.data ?? [], invoices: i.data ?? [], payments: p.data ?? [], requests: r.data ?? [], notifs: n.data ?? [], packages: pk.data ?? [] } as any;
     },
   });
   const signOut = async () => { await qc.cancelQueries(); qc.clear(); await supabase.auth.signOut(); nav({ to: "/auth", replace: true }); };
